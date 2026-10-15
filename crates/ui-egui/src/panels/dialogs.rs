@@ -1163,8 +1163,8 @@ pub fn show(app: &mut LightcraftApp, ctx: &egui::Context) {
                         2 => crate::credits::models_ui(ui),
                         _ => {
                             ui.label(egui::RichText::new("LightBridge - Angerô").font(t.semibold(20.0)).color(t.text));
-                            ui.label(crate::i18n::tr_format!("Versão {} — catálogo e revelação de fotos da Suíte Angerô.", env!("CARGO_PKG_VERSION")));
-                            ui.label(crate::i18n::tr_format!(
+                            ui.label(format!("Versão {} — catálogo e revelação de fotos da Suíte Angerô.", env!("CARGO_PKG_VERSION")));
+                            ui.label(format!(
                                 "Suíte Angerô — Grupo Angerô. Desenvolvido por Weslei Domingues (TI). Licença MIT OU Apache-2.0 (veja NOTICE). Fontes: {} (OFL).",
                                 crate::theme::font_credits(app.chinese_font.is_some())
                             ));
