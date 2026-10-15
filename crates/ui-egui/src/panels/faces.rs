@@ -449,7 +449,7 @@ pub fn model_dialog(app: &mut LightcraftApp, ui: &mut egui::Ui, t: &Tokens, info
     }
     if kind == "draft" {
         ui.add_space(2.0);
-        ui.label(RichText::new("LightCraft does not know this model, so it assumed:").color(t.text_label));
+        ui.label(RichText::new("O LightBridge não conhece este modelo; por isso considerou:").color(t.text_label));
         for a in info["assumptions"].as_array().into_iter().flatten().filter_map(Value::as_str) {
             ui.add(egui::Label::new(RichText::new(format!("•  {a}")).font(t.font(12.0)).color(t.text_dim)).wrap());
         }

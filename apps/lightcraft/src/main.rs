@@ -4,7 +4,7 @@
 //!
 //! The library (catalog, presets, thumbnail cache) lives in `--library DIR`, else
 //! `$LIGHTCRAFT_LIBRARY`, else the library last opened with Settings → Open Library…, else
-//! `~/Pictures/LightCraft Library`; a new library starts with the
+//! `~/Pictures/Biblioteca LightBridge`; a new library starts with the
 //! procedural demo photos unless `--no-demo` or files are given. Files and folders on the command
 //! line are imported (duplicates are skipped). `--memory` runs an in-memory session that writes
 //! nothing (demo photos unless files are given; used by the README showcase scripts). A library
@@ -666,7 +666,7 @@ lightcraft — photo library + raw developer
 USAGE: lightcraft [OPTIONS] [FILES/FOLDERS…]   (files and folders are imported)
 
 OPTIONS:
-  --library DIR    open (or create) this library (default: ~/Pictures/LightCraft Library; env LIGHTCRAFT_LIBRARY)
+  --library DIR    open (or create) this library (default: ~/Pictures/Biblioteca LightBridge; env LIGHTCRAFT_LIBRARY)
   --no-demo        don't seed a new library with the procedural demo photos
   --memory         throwaway in-memory session (alias --demo); nothing is saved
   --control PORT   serve the JSON-lines control channel on 127.0.0.1:PORT (env LIGHTCRAFT_CONTROL_PORT;

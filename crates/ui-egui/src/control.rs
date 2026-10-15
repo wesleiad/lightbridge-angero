@@ -471,7 +471,7 @@ pub const NO_EXPORT_FOLDER: &str = "Choose an export folder first.";
 pub fn default_export_dir() -> String {
     let home = if cfg!(windows) { std::env::var_os("USERPROFILE").or_else(|| std::env::var_os("HOME")) } else { std::env::var_os("HOME") };
     home.filter(|h| !h.is_empty())
-        .map(|h| std::path::PathBuf::from(h).join("Pictures").join("LightCraft Exports").to_string_lossy().into_owned())
+        .map(|h| std::path::PathBuf::from(h).join("Pictures").join("LightBridge Exportações").to_string_lossy().into_owned())
         .unwrap_or_default()
 }
 

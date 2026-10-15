@@ -15,6 +15,7 @@ fn main() {
     let mut res = winresource::WindowsResource::new();
     res.set_icon("../../assets/app-icon/lightcraft.ico")
         .set("ProductName", "LightBridge - Angerô")
+        .set("CompanyName", "Grupo Angerô")
         .set("FileDescription", "LightBridge - Angerô")
         .set("LegalCopyright", "Grupo Angerô. MIT OR Apache-2.0 (ver NOTICE).")
         .set("OriginalFilename", "lightbridge.exe")
