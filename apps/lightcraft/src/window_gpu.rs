@@ -112,7 +112,7 @@ pub fn choose(files: &Files) -> Chosen {
             "{n} {app} now draws its window with {}. To choose another, start {app} with {var}=dx12, vulkan, gl or glow \
              (see docs/gpu-pipeline.md → Troubleshooting).",
             which.name(),
-            app = "LightCraft",
+            app = "LightBridge - Angerô",
             var = "LIGHTCRAFT_GPU_BACKEND",
         )
     });

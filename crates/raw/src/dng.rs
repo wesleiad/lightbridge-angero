@@ -307,9 +307,9 @@ pub(crate) fn decode_as(bytes: &[u8], mode: Mode, format: RawFormat) -> Result<R
         // the tag is anchored at the top-left of the ActiveArea (DNG spec); `RawImage::cfa` is anchored at the
         // sensor origin (the crop to the active area shifts it back), so move the anchor out by the area's offset
         // (LightCraft's own DNGs from before the writer followed the spec carry the sensor-origin pattern; they are marked by
-        // a bare "LightCraft" Software tag, the writer now says [`crate::dngwrite::SOFTWARE`], and keep their original reading)
+        // a bare "LightBridge-Angero" Software tag, the writer now says [`crate::dngwrite::SOFTWARE`], and keep their original reading)
         let at_origin = Cfa { width: cols, height: rows, pattern };
-        let legacy_writer = [raw, ifd0].iter().any(|i| i.string(t::SOFTWARE).as_deref().map(str::trim) == Some("LightCraft"));
+        let legacy_writer = [raw, ifd0].iter().any(|i| i.string(t::SOFTWARE).as_deref().map(str::trim) == Some("LightBridge-Angero"));
         Some(if legacy_writer { at_origin } else { at_origin.shifted(cols - active_area.x % cols, rows - active_area.y % rows) })
     } else {
         None

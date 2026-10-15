@@ -1162,26 +1162,17 @@ pub fn show(app: &mut LightcraftApp, ctx: &egui::Context) {
                         1 => crate::credits::contributors_ui(app, ui),
                         2 => crate::credits::models_ui(ui),
                         _ => {
-                            ui.label(egui::RichText::new("LightCraft").font(t.semibold(20.0)).color(t.text));
-                            ui.label(crate::i18n::tr_format!("Version {} — a clean-room, pure-Rust photo library and raw developer.", env!("CARGO_PKG_VERSION")));
+                            ui.label(egui::RichText::new("LightBridge - Angerô").font(t.semibold(20.0)).color(t.text));
+                            ui.label(crate::i18n::tr_format!("Versão {} — catálogo e revelação de fotos da Suíte Angerô.", env!("CARGO_PKG_VERSION")));
                             ui.label(crate::i18n::tr_format!(
-                                "MIT OR Apache-2.0. Fonts: {} (OFL). Icons: original.",
+                                "Suíte Angerô — Grupo Angerô. Desenvolvido por Weslei Domingues (TI). Licença MIT OU Apache-2.0 (veja NOTICE). Fontes: {} (OFL).",
                                 crate::theme::font_credits(app.chinese_font.is_some())
                             ));
                             ui.add_space(10.0);
-                            let discord = egui::Button::new(egui::RichText::new(crate::i18n::tr("Join the ArtCraft Discord")).font(t.semibold(15.0)).color(egui::Color32::WHITE))
-                                .fill(t.accent)
-                                .min_size(egui::vec2(260.0, 34.0));
-                            let r = ui.add(discord).on_hover_text(crate::links::DISCORD);
-                            crate::widgets::register(ui.ctx(), "button:aboutDiscord", r.rect);
-                            if r.clicked() {
-                                let _ = crate::links::open(app, crate::links::DISCORD);
-                            }
-                            ui.add_space(6.0);
                             for (label, url) in [
-                                ("LightCraft website", crate::links::APP_PAGE),
-                                ("Source code on GitHub", crate::links::GITHUB),
-                                ("ArtCraft — more creative apps", crate::links::WEBSITE),
+                                ("Ajuda do LightBridge", crate::links::APP_PAGE),
+                                ("Código-fonte (GitHub)", crate::links::GITHUB),
+                                ("Suíte Angerô", crate::links::WEBSITE),
                             ] {
                                 let r = ui.link(crate::i18n::tr(label)).on_hover_text(url);
                                 if r.clicked() {
@@ -1424,7 +1415,7 @@ fn sam_by_hand(sam: &lightcraft_engine::segment::Segmenter) -> bool {
 }
 
 /// The model installation guide.
-const SAM_HELP: &str = "https://github.com/storytold/lightcraft/blob/main/docs/ai-masks.md#getting-the-model";
+const SAM_HELP: &str = "https://github.com/wesleiad/lightbridge-angero";
 
 /// Open the configured SAM 3 folder itself; revealing a file opens its parent instead.
 pub(crate) fn show_model_folder(app: &mut LightcraftApp) -> Result<serde_json::Value, String> {

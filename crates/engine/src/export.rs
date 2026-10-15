@@ -1532,7 +1532,7 @@ pub fn export_metadata(photo: &lightcraft_catalog::Photo, catalog: &lightcraft_c
         usage_terms: text(&m.usage_terms),
         copyright_url: text(&m.copyright_url),
         artist: text(&m.creator),
-        software: Some("LightCraft".into()),
+        software: Some("LightBridge-Angero".into()),
         ..Default::default()
     };
     match o.metadata {
@@ -2360,7 +2360,7 @@ mod tests {
         for p in img.data.iter_mut() {
             *p = [0, 0, 0, 255];
         }
-        let o = ExportOptions::from_json(&serde_json::json!({"watermark": {"text": "LightCraft", "size": 0.08, "opacity": 1.0, "shadow": false}}));
+        let o = ExportOptions::from_json(&serde_json::json!({"watermark": {"text": "LightBridge-Angero", "size": 0.08, "opacity": 1.0, "shadow": false}}));
         let wm = o.watermark.clone().unwrap();
         draw_watermark(&mut img, &wm);
         let lit = |x0: usize, x1: usize, y0: usize, y1: usize| {
@@ -2419,7 +2419,7 @@ mod tests {
             let (y0, y1) = (on.iter().map(|p| p.1).min().unwrap(), on.iter().map(|p| p.1).max().unwrap());
             (x0, x1, y0, y1, img)
         };
-        let base = Watermark { text: "LightCraft".into(), size: 0.08, opacity: 1.0, shadow: false, inset_x: 0.0, inset_y: 0.0, ..Default::default() };
+        let base = Watermark { text: "LightBridge-Angero".into(), size: 0.08, opacity: 1.0, shadow: false, inset_x: 0.0, inset_y: 0.0, ..Default::default() };
         let (a0, a1, b0, b1, flat) = lit(&base);
         assert!(a1 - a0 > 2 * (b1 - b0), "unturned text is wide");
         for rotation in [90, 270] {
@@ -2445,7 +2445,7 @@ mod tests {
     /// clamped to 6 px in a 150 px export covers the same share of a 600 px preview.
     #[test]
     fn watermark_preview_scales_the_minimum_text_size() {
-        let wm = Watermark { text: "LightCraft".into(), size: 0.01, opacity: 1.0, shadow: false, ..Default::default() };
+        let wm = Watermark { text: "LightBridge-Angero".into(), size: 0.01, opacity: 1.0, shadow: false, ..Default::default() };
         let rows = |img: &Rgba8| (0..img.height).filter(|&y| (0..img.width).any(|x| img.get(x, y)[0] > 64)).count() as f32;
         let mut export = Rgba8::new(200, 150);
         draw_watermark(&mut export, &wm);

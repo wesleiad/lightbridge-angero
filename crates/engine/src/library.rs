@@ -267,11 +267,11 @@ fn same_dir(a: &Path, b: &Path) -> bool {
     }
 }
 
-/// This program, for the lock owner note ("LightCraft", "lightcraft-cli").
+/// This program, for the lock owner note ("LightBridge-Angero", "lightcraft-cli").
 fn program_name() -> String {
     let exe = std::env::current_exe().ok().and_then(|p| p.file_stem().map(|s| s.to_string_lossy().to_string()));
     match exe.as_deref() {
-        Some("lightcraft") | None => "LightCraft".into(),
+        Some("lightcraft") | None => "LightBridge-Angero".into(),
         Some(other) => other.to_string(),
     }
 }

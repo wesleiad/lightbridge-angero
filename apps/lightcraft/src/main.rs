@@ -820,7 +820,7 @@ fn main() -> eframe::Result {
     let options = eframe::NativeOptions {
         renderer,
         viewport: egui::ViewportBuilder::default()
-            .with_title("LightCraft")
+            .with_title("LightBridge - Angerô")
             .with_inner_size([1600.0, 1000.0])
             .with_min_inner_size([900.0, 560.0])
             .with_drag_and_drop(true)
@@ -849,7 +849,7 @@ fn main() -> eframe::Result {
     }
     let started = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
         eframe::run_native(
-            "LightCraft",
+            "LightBridge-Angero",
             options,
             Box::new(move |cc| {
                 // the window's renderer is up (eframe calls this after creating it)

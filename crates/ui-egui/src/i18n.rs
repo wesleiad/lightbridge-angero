@@ -1232,7 +1232,7 @@ mod tests {
             // replacement-glyph face, which there is Hack, the face that draws Latin.)
             for family in [egui::FontFamily::Proportional, egui::FontFamily::Name(crate::theme::FONT_SEMIBOLD.into())] {
                 let font = egui::FontId::new(13.0, family);
-                assert!("LightCraft".chars().all(|ch| fonts.has_glyph(&font, ch)), "{font:?}");
+                assert!("LightBridge - Angerô".chars().all(|ch| fonts.has_glyph(&font, ch)), "{font:?}");
             }
         });
         let mut app = crate::LightcraftApp::new(lightcraft_engine::Session::with_demo(), Default::default());

@@ -208,7 +208,6 @@ pub const UI_COMMANDS: &[UiCommand] = &[
     ("app.whatsNew", "What's New", None, "Help"),
     ("dialog.cull", "Assisted Culling…", None, "Photo"),
     ("app.help", "LightCraft Help", Some("F1"), "Help"),
-    ("app.discord", "Join the ArtCraft Discord…", None, "Help"),
     ("app.feedback", "Send Feedback…", None, "Help"),
     ("app.website", "LightCraft Website", None, "Help"),
     ("app.github", "LightCraft on GitHub", None, "Help"),

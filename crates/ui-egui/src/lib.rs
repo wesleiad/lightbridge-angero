@@ -1298,11 +1298,11 @@ impl LightcraftApp {
         ctx.send_viewport_cmd(egui::ViewportCommand::Title(self.window_title()));
     }
 
-    /// "LightCraft — <library name>" (just "LightCraft" for a library that isn't saved).
+    /// "LightCraft — <library name>" (just "LightBridge - Angerô" for a library that isn't saved).
     pub fn window_title(&self) -> String {
         match panels::settings::open_library_name(self) {
             Some(name) => format!("LightCraft — {name}"),
-            None => "LightCraft".to_string(),
+            None => "LightBridge - Angerô".to_string(),
         }
     }
 

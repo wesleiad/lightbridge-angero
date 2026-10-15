@@ -4,7 +4,7 @@ version.workspace = true
 edition.workspace = true
 license.workspace = true
 publish = false
-default-run = "lightcraft"
+default-run = "lightbridge"
 
 [lints]
 workspace = true
@@ -48,3 +48,7 @@ muda = { workspace = true }
 objc2 = { workspace = true }
 objc2-app-kit = { workspace = true }
 objc2-foundation = { workspace = true }
+
+[[bin]]
+name = "lightbridge"
+path = "src/main.rs"

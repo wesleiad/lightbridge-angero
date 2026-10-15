@@ -25,7 +25,7 @@ pub enum DngCompression {
     },
 }
 
-/// Software tag of the DNGs this writer makes. A bare "LightCraft" marks older files, whose CFAPattern is anchored at
+/// Software tag of the DNGs this writer makes. A bare "LightBridge-Angero" marks older files, whose CFAPattern is anchored at
 /// the sensor origin instead of the ActiveArea (the reader keeps their original reading).
 pub const SOFTWARE: &str = "LightCraft DNG 2";
 
@@ -130,7 +130,7 @@ pub fn write_dng(raw: &RawImage, opts: &DngWriteOptions) -> Result<Vec<u8>> {
     } else {
         format!("{make} {model}")
     };
-    ifd.set(t::UNIQUE_CAMERA_MODEL, Value::Ascii(if unique.is_empty() { "LightCraft".into() } else { unique }));
+    ifd.set(t::UNIQUE_CAMERA_MODEL, Value::Ascii(if unique.is_empty() { "LightBridge-Angero".into() } else { unique }));
     ifd.set(t::ORIENTATION, Value::Short(vec![raw.orientation.to_exif()]));
     ifd.set(t::SOFTWARE, Value::Ascii(SOFTWARE.into()));
     let xmp = opts.xmp.clone().unwrap_or_else(|| lightcraft_meta::write_xmp(&raw.metadata, None));

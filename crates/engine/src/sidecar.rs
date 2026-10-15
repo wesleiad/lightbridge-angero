@@ -317,7 +317,7 @@ pub fn sidecar_packet(p: &Photo, cat: &lightcraft_catalog::Catalog) -> String {
 pub fn sidecar_packet_with(p: &Photo, cat: &lightcraft_catalog::Catalog, remove_location: bool) -> String {
     let nz = |s: &str| (!s.trim().is_empty()).then(|| s.to_string());
     let meta = lightcraft_meta::Metadata {
-        software: Some("LightCraft".into()),
+        software: Some("LightBridge-Angero".into()),
         title: nz(&p.meta.title),
         caption: nz(&p.meta.caption),
         alt_text: nz(&p.meta.alt_text),

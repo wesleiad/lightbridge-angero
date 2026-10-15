@@ -166,7 +166,7 @@ impl Server {
                 Ok(json!({
                     "protocolVersion": version,
                     "capabilities": {"tools": {"listChanged": false}, "resources": {"subscribe": false, "listChanged": false}},
-                    "serverInfo": {"name": "lightcraft", "title": "LightCraft", "version": env!("CARGO_PKG_VERSION")},
+                    "serverInfo": {"name": "lightcraft", "title": "LightBridge-Angero", "version": env!("CARGO_PKG_VERSION")},
                     "instructions": format!("{INSTRUCTIONS} Backend: {}.", self.backend.describe()),
                 }))
             }

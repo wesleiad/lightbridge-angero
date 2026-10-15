@@ -7,7 +7,7 @@ publish = false
 description = "LightCraft command-line tool: headless render, command listing and the MCP server"
 
 [[bin]]
-name = "lightcraft-cli"
+name = "lightbridge-cli"
 path = "src/main.rs"
 
 [lints]

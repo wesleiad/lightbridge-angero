@@ -112,7 +112,7 @@ fn launcher(app: &str) -> Result<Launcher, String> {
         return Ok(if cfg!(target_os = "macos") { Launcher::MacApp(app.to_string()) } else { Launcher::Program(PathBuf::from(app)) });
     }
     find_photocraft().ok_or_else(|| {
-        "PhotoCraft isn't installed. Get it from getartcraft.com/apps/photocraft, or give where it is in Settings ▸ External Editing.".to_string()
+        "O Fotografe - Angerô não está instalado. Instale pela Suíte Angerô ou indique onde ele está em Configurações ▸ Edição externa.".to_string()
     })
 }
 
@@ -151,12 +151,12 @@ fn find_photocraft() -> Option<Launcher> {
 /// folders (per machine, then per user).
 fn windows_candidates(install_dir: Option<String>, app_path: Option<String>, env: impl Fn(&str) -> Option<String>) -> Vec<PathBuf> {
     let mut out: Vec<PathBuf> = Vec::new();
-    out.extend(install_dir.map(|d| Path::new(&d).join("photocraft.exe")));
+    out.extend(install_dir.map(|d| Path::new(&d).join("fotografe.exe")));
     out.extend(app_path.map(|p| PathBuf::from(p.trim_matches('"'))));
     for var in ["ProgramW6432", "ProgramFiles"] {
-        out.extend(env(var).map(|d| Path::new(&d).join("PhotoCraft").join("photocraft.exe")));
+        out.extend(env(var).map(|d| Path::new(&d).join("Fotografe - Angerô").join("fotografe.exe")));
     }
-    out.extend(env("LOCALAPPDATA").map(|d| Path::new(&d).join("Programs").join("PhotoCraft").join("photocraft.exe")));
+    out.extend(env("LOCALAPPDATA").map(|d| Path::new(&d).join("Programs").join("Fotografe - Angerô").join("fotografe.exe")));
     out
 }
 
@@ -254,10 +254,10 @@ mod tests {
         };
         let c = windows_candidates(Some(r"D:\Apps\PhotoCraft\".into()), Some(r#""C:\Program Files\PhotoCraft\photocraft.exe""#.into()), env);
         let c: Vec<String> = c.iter().map(|p| p.to_string_lossy().replace('/', "\\")).collect();
-        assert!(c[0].starts_with(r"D:\Apps\PhotoCraft") && c[0].ends_with("photocraft.exe"), "{c:?}");
+        assert!(c[0].starts_with(r"D:\Apps\PhotoCraft") && c[0].ends_with("fotografe.exe"), "{c:?}");
         assert_eq!(c[1], r"C:\Program Files\PhotoCraft\photocraft.exe", "App Paths, quotes dropped");
-        assert!(c[2].starts_with(r"C:\Program Files") && c[2].ends_with("photocraft.exe"), "{c:?}");
-        assert!(c[3].contains("Programs") && c[3].ends_with("photocraft.exe"), "{c:?}");
+        assert!(c[2].starts_with(r"C:\Program Files") && c[2].ends_with("fotografe.exe"), "{c:?}");
+        assert!(c[3].contains("Programs") && c[3].ends_with("fotografe.exe"), "{c:?}");
         assert_eq!(c.len(), 4);
     }
 

@@ -14,11 +14,11 @@ fn main() {
     }
     let mut res = winresource::WindowsResource::new();
     res.set_icon("../../assets/app-icon/lightcraft.ico")
-        .set("ProductName", "LightCraft")
-        .set("FileDescription", "LightCraft photo library and raw developer")
-        .set("LegalCopyright", "Copyright (c) the LightCraft authors. MIT OR Apache-2.0.")
-        .set("OriginalFilename", "lightcraft.exe")
-        .set("InternalName", "lightcraft");
+        .set("ProductName", "LightBridge - Angerô")
+        .set("FileDescription", "LightBridge - Angerô")
+        .set("LegalCopyright", "Grupo Angerô. MIT OR Apache-2.0 (ver NOTICE).")
+        .set("OriginalFilename", "lightbridge.exe")
+        .set("InternalName", "lightbridge");
     if let Err(e) = res.compile() {
         if std::env::var_os("LIGHTCRAFT_REQUIRE_WINRES").is_some() {
             panic!("embedding Windows resources failed: {e}");

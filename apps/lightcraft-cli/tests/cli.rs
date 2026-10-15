@@ -1,4 +1,4 @@
-//! End-to-end tests of the `lightcraft-cli` binary: `mcp` over real stdio pipes, `render`, `commands`.
+//! End-to-end tests of the `lightbridge-cli` binary: `mcp` over real stdio pipes, `render`, `commands`.
 
 use std::io::{BufRead, BufReader, Write};
 use std::process::{Command, Stdio};
@@ -455,7 +455,7 @@ fn a_library_open_in_another_process_is_refused() {
     }
     let (ok, _, stderr) = run_cli(&["--library", lib_s, "library.info"], None);
     assert!(!ok);
-    assert!(stderr.contains("already open in lightcraft-cli") && stderr.contains(&format!("process {}", holder.id())), "{stderr}");
+    assert!(stderr.contains("already open in lightbridge-cli") && stderr.contains(&format!("process {}", holder.id())), "{stderr}");
     assert!(stderr.contains("mcp --connect"), "{stderr}");
 
     drop(holder.stdin.take()); // EOF: the server exits and lets go of the library

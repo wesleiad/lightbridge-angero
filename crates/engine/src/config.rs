@@ -57,7 +57,7 @@ fn config_dir_with(platform: Platform, env: impl Fn(&str) -> Option<OsString>, p
     }
     match platform {
         Platform::Mac => env("HOME").map(|h| PathBuf::from(h).join("Library/Application Support/LightCraft")),
-        Platform::Windows => env("APPDATA").map(|a| PathBuf::from(a).join("LightCraft")),
+        Platform::Windows => env("APPDATA").map(|a| PathBuf::from(a).join("LightBridge-Angero")),
         Platform::Other => {
             env("XDG_CONFIG_HOME").map(PathBuf::from).or_else(|| env("HOME").map(|h| PathBuf::from(h).join(".config"))).map(|c| c.join("lightcraft"))
         }
