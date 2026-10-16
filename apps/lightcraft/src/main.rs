@@ -625,6 +625,20 @@ fn open_session(in_memory: bool, dir: Option<std::path::PathBuf>, seed_demo: boo
     (s, problem)
 }
 
+/// Angerô: tira da biblioteca as fotos de demonstração (sem arquivo no disco) que versões
+/// anteriores colocavam nela; cada abertura as gerava de novo, pixel a pixel.
+fn remove_demo_photos(s: &mut Session) {
+    let demo: Vec<_> = s.catalog.photos().filter(|p| matches!(p.source, lightcraft_catalog::Source::Demo { .. })).map(|p| p.id).collect();
+    if demo.is_empty() {
+        return;
+    }
+    let op = s.catalog.delete_photos_permanently_ops(&demo);
+    match s.commit("Remove demo photos", op) {
+        Ok(()) => log::info!("removed {} demo photos from the library", demo.len()),
+        Err(e) => log::warn!("couldn't remove the demo photos: {e}"),
+    }
+}
+
 /// The persistent library session, or with `--memory` an in-memory one (demo photos).
 ///
 /// If the library can't be opened the session is empty and in memory — never seeded with the
@@ -644,6 +658,9 @@ fn open_library_session(in_memory: bool, dir: Option<std::path::PathBuf>, seed_d
     match s.open_library(&dir, seed_demo) {
         Ok(r) => {
             let (replayed, torn) = (r.replayed, r.torn_bytes);
+            if !seed_demo {
+                remove_demo_photos(&mut s);
+            }
             log::info!(
                 "library {}: {} photos, {replayed} log records replayed{} ({:.1} ms)",
                 dir.display(),
@@ -667,8 +684,9 @@ USAGE: lightcraft [OPTIONS] [FILES/FOLDERS…]   (files and folders are imported
 
 OPTIONS:
   --library DIR    open (or create) this library (default: ~/Pictures/Biblioteca LightBridge; env LIGHTCRAFT_LIBRARY)
-  --no-demo        don't seed a new library with the procedural demo photos
-  --memory         throwaway in-memory session (alias --demo); nothing is saved
+  --no-demo        (padrão) bibliotecas novas sem as fotos de demonstração; as antigas são removidas
+  --memory         throwaway in-memory session; nothing is saved
+  --demo           in-memory session with the procedural demo photos
   --control PORT   serve the JSON-lines control channel on 127.0.0.1:PORT (env LIGHTCRAFT_CONTROL_PORT;
                    see docs/control-protocol.md)
   --version, --help
@@ -747,7 +765,9 @@ fn main() -> eframe::Result {
     alloc_release::install();
     let mut control_port = control_port_from("LIGHTCRAFT_CONTROL_PORT", std::env::var("LIGHTCRAFT_CONTROL_PORT").ok().filter(|v| !v.is_empty()));
     let mut files = Vec::new();
-    let mut seed_demo = true;
+    // Angerô: bibliotecas novas nascem vazias; as fotos de demonstração são geradas por cálculo
+    // a cada abertura (minutos de CPU num PC fraco). `--demo` (em memória) ainda as mostra.
+    let mut seed_demo = false;
     let mut in_memory = false;
     let mut library_dir: Option<std::path::PathBuf> = None;
     let mut args = std::env::args().skip(1);
@@ -756,7 +776,11 @@ fn main() -> eframe::Result {
             "--control" => control_port = control_port_from("--control", Some(args.next().unwrap_or_default())),
             "--library" => library_dir = args.next().map(std::path::PathBuf::from),
             "--no-demo" => seed_demo = false,
-            "--memory" | "--demo" => in_memory = true,
+            "--memory" => in_memory = true,
+            "--demo" => {
+                in_memory = true;
+                seed_demo = true;
+            }
             "--version" => {
                 println!("lightcraft {}", env!("CARGO_PKG_VERSION"));
                 return Ok(());

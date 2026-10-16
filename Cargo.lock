@@ -3077,6 +3077,7 @@ version = "1.0.0"
 dependencies = [
  "eframe",
  "egui",
+ "lightcraft-catalog",
  "lightcraft-codecs",
  "lightcraft-engine",
  "lightcraft-raster",
