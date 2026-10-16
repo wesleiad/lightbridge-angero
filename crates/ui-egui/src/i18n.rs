@@ -682,7 +682,7 @@ mod tests {
     #[test]
     fn preferences_round_trip_and_old_settings_remain_readable() {
         let old: crate::state::UiState = serde_json::from_str("{}").unwrap();
-        assert_eq!(old.language, Locale::En);
+        assert_eq!(old.language, Locale::PtBr, "Angerô: português por padrão");
         // Settings written before the language list grew still load.
         let legacy: crate::state::UiState = serde_json::from_str(r#"{"language":"ja"}"#).unwrap();
         assert_eq!(legacy.language, Locale::Ja);

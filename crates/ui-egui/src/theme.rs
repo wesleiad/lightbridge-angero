@@ -332,6 +332,14 @@ pub fn font_definitions_with_chinese(craft: &'static [lightcraft_engine::CraftFo
         mono_fallback.push(WEB_CHINESE_FONT.into());
     }
     mono.extend(mono_fallback);
+    // Angerô: a Montserrat não tem alguns símbolos (setas, ▸, ✓…) que a fonte anterior tinha; ela
+    // fica logo depois, de reserva, em toda pilha que começa pela Montserrat.
+    fonts.font_data.insert("AngeroReserva".into(), Arc::new(FontData::from_static(include_bytes!("../../../assets/fonts/Inter-Regular.ttf"))));
+    for stack in fonts.families.values_mut() {
+        if let Some(i) = stack.iter().position(|n| n.starts_with("Inter")) {
+            stack.insert(i + 1, "AngeroReserva".into());
+        }
+    }
     fonts
 }
 

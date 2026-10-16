@@ -24,13 +24,14 @@ fn frame(app: &mut LightcraftApp, ctx: &egui::Context) {
 #[test]
 fn new_users_keep_the_dark_look_and_old_settings_load_unchanged() {
     let s = AppSettings::default();
-    assert_eq!((s.appearance_mode, s.dark_theme, s.light_theme), (AppearanceMode::Dark, DarkTheme::Charcoal, LightTheme::Silver));
-    assert_eq!(s.theme(Some(egui::Theme::Light)), ThemeKind::Charcoal, "Auto is opt-in");
+    // Angerô: new users get the light "Lua Nova" identity (Paper); Auto stays opt-in.
+    assert_eq!((s.appearance_mode, s.dark_theme, s.light_theme), (AppearanceMode::Light, DarkTheme::Charcoal, LightTheme::Paper));
+    assert_eq!(s.theme(Some(egui::Theme::Dark)), ThemeKind::Paper, "Auto is opt-in");
     // a ui.json saved before appearance modes existed
     let old: UiState = serde_json::from_str(r#"{"settings": {"gridBadges": "always", "startupView": "detail"}}"#).unwrap();
-    assert_eq!(old.settings.appearance_mode, AppearanceMode::Dark);
+    assert_eq!(old.settings.appearance_mode, AppearanceMode::Light);
     assert_eq!(old.settings.dark_theme, DarkTheme::Charcoal);
-    assert_eq!(old.settings.light_theme, LightTheme::Silver);
+    assert_eq!(old.settings.light_theme, LightTheme::Paper);
     assert_eq!(old.settings.startup_view, crate::state::StartupView::Detail);
     // and the Charcoal tokens are the ones LightCraft always had
     assert_eq!(crate::theme::Tokens::for_kind(ThemeKind::Charcoal).chrome, crate::theme::Tokens::default().chrome);
@@ -127,7 +128,7 @@ fn auto_follows_the_system_and_falls_back_to_dark() {
     a.run("view.appearance", json!({"mode": "auto"})).unwrap();
     let ctx = egui::Context::default();
     frame(&mut a, &ctx);
-    assert_eq!(crate::theme::current(&ctx), Some(ThemeKind::Silver));
+    assert_eq!(crate::theme::current(&ctx), Some(ThemeKind::Paper));
     assert_eq!(ctx.theme(), egui::Theme::Light);
     *system.lock().unwrap() = Some(egui::Theme::Dark);
     frame(&mut a, &ctx);
