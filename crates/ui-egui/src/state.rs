@@ -283,6 +283,10 @@ pub struct AppSettings {
     /// The monitor's ICC profile previews are shown through (`app.displayProfile`; "" = none:
     /// the display is treated as sRGB).
     pub display_profile: String,
+    /// Angerô: cor de destaque escolhida pelo usuário ("#rrggbb"; vazio = a da identidade Lua Nova).
+    pub accent_color: String,
+    /// Angerô: 1 depois que o tema Lua Nova foi aplicado uma vez (0 nas configurações antigas).
+    pub angero_tema: u32,
 }
 
 impl Default for AppSettings {
@@ -303,11 +307,13 @@ impl Default for AppSettings {
             film_badges: true,
             grid_badges: GridBadges::Auto,
             keymap: Default::default(),
-            appearance_mode: AppearanceMode::Dark,
+            appearance_mode: AppearanceMode::Light,
             dark_theme: DarkTheme::Charcoal,
-            light_theme: LightTheme::Silver,
+            light_theme: LightTheme::Paper,
             favorite_themes: Vec::new(),
             display_profile: String::new(),
+            accent_color: String::new(),
+            angero_tema: 0,
         }
     }
 }
@@ -1211,6 +1217,18 @@ impl UiState {
     }
     /// Clamp values restored from disk.
     pub fn sanitized(mut self) -> Self {
+        // Angerô: a identidade "Lua Nova" (tema claro) é o padrão; uma vez por instalação, quem
+        // vinha com o tema de antes passa para ela (depois disso, a escolha da pessoa vale).
+        if self.settings.angero_tema < 1 {
+            self.settings.appearance_mode = AppearanceMode::Light;
+            self.settings.light_theme = LightTheme::Paper;
+            self.settings.angero_tema = 1;
+        }
+        // Angerô: o inglês vinha só por ser o padrão antigo; a Suíte Angerô é em português (uma vez).
+        if self.settings.angero_tema < 2 {
+            self.language = crate::i18n::Locale::PtBr;
+            self.settings.angero_tema = 2;
+        }
         self.thumb_size = self.thumb_size.clamp(90.0, 480.0);
         self.left_width = LEFT_WIDTH.clamp(self.left_width);
         self.right_width = RIGHT_WIDTH.clamp(self.right_width);

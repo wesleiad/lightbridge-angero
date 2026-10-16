@@ -112,7 +112,7 @@ impl ThemeKind {
             ThemeKind::Charcoal => "Charcoal",
             ThemeKind::Midnight => "Midnight",
             ThemeKind::Silver => "Silver",
-            ThemeKind::Paper => "Paper",
+            ThemeKind::Paper => "Lua Nova (Angerô)",
         }
     }
 }
@@ -213,30 +213,31 @@ impl Tokens {
                 caution: rgb(0xb0761a),
                 ..base
             },
+            // Angerô: identidade "Lua Nova" (bege, tinta anil, destaque anil da Angerô); o padrão.
             ThemeKind::Paper => Tokens {
-                chrome: rgb(0xfafafa),
-                canvas: rgb(0xececec),
-                grid_bg: rgb(0xf2f2f2),
-                cell: rgb(0xe8e8e8),
-                cell_selected: rgb(0xd2d2d2),
-                divider: rgb(0xe0e0e0),
-                inset: rgb(0xf0f0f0),
+                chrome: rgb(0xf7f5ec),
+                canvas: rgb(0xeeecde),
+                grid_bg: rgb(0xf3f1e7),
+                cell: rgb(0xe9e6d8),
+                cell_selected: rgb(0xdee5fa),
+                divider: rgb(0xe1dccb),
+                inset: rgb(0xf1eee3),
                 field: rgb(0xffffff),
-                field_border: rgb(0xcccccc),
+                field_border: rgb(0xc9c3b0),
                 button: rgb(0xffffff),
-                button_border: rgb(0xc6c6c6),
-                hover: rgb(0xebebeb),
-                pressed: rgb(0xdedede),
-                tool_active: rgb(0xe2e2e2),
-                text: rgb(0x161616),
-                text_label: rgb(0x343434),
-                text_dim: rgb(0x707070),
-                text_disabled: rgb(0xababab),
-                icon: rgb(0x585858),
-                track: rgb(0xbdbdbd),
-                thumb: rgb(0x606060),
-                thumb_hover: rgb(0x202020),
-                accent: rgb(0x0a62d0),
+                button_border: rgb(0xc9c3b0),
+                hover: rgb(0xebe5f5),
+                pressed: rgb(0xdcd5ee),
+                tool_active: rgb(0xdee5fa),
+                text: rgb(0x1e234d),
+                text_label: rgb(0x2f3561),
+                text_dim: rgb(0x4e5478),
+                text_disabled: rgb(0x9a9cb0),
+                icon: rgb(0x2b3a8f),
+                track: rgb(0xc9c3b0),
+                thumb: rgb(0x2b3a8f),
+                thumb_hover: rgb(0x1e234d),
+                accent: rgb(0x2b3a8f),
                 star: rgb(0x3a3a3a),
                 pick: rgb(0x2a2a2a),
                 reject: rgb(0xc83434),
@@ -277,8 +278,9 @@ pub fn font_definitions(craft: &'static [lightcraft_engine::CraftFont]) -> FontD
 /// Prefer it for Chinese UI text, including Traditional Chinese until it has its own face.
 pub fn font_definitions_with_chinese(craft: &'static [lightcraft_engine::CraftFont], chinese: Option<&Arc<FontData>>) -> FontDefinitions {
     let mut fonts = FontDefinitions::default();
-    fonts.font_data.insert("Inter".into(), Arc::new(FontData::from_static(include_bytes!("../../../assets/fonts/Inter-Regular.ttf"))));
-    fonts.font_data.insert("Inter-SemiBold".into(), Arc::new(FontData::from_static(include_bytes!("../../../assets/fonts/Inter-SemiBold.ttf"))));
+    // Angerô: a interface usa Montserrat (identidade Lua Nova); os nomes "Inter*" ficam como apelidos.
+    fonts.font_data.insert("Inter".into(), Arc::new(FontData::from_static(include_bytes!("../../../assets/fonts/Montserrat-Regular.ttf")).tweak(egui::epaint::text::FontTweak { scale: 0.94, ..Default::default() })));
+    fonts.font_data.insert("Inter-SemiBold".into(), Arc::new(FontData::from_static(include_bytes!("../../../assets/fonts/Montserrat-SemiBold.ttf")).tweak(egui::epaint::text::FontTweak { scale: 0.94, ..Default::default() })));
     // Craft-fonts faces in preference order for a family drawn in `style`.
     let fallback = |style: &str| {
         lightcraft_engine::fonts::ui_fallback(craft, crate::i18n::language().script(), style)
@@ -384,6 +386,27 @@ pub fn current(ctx: &egui::Context) -> Option<ThemeKind> {
 }
 
 /// Style `ctx` with the default theme.
+static CUSTOM_ACCENT: std::sync::Mutex<Option<Color32>> = std::sync::Mutex::new(None);
+
+/// Angerô: a cor de destaque escolhida pelo usuário (`None`: a da identidade Lua Nova).
+pub fn custom_accent() -> Option<Color32> {
+    CUSTOM_ACCENT.lock().ok().and_then(|c| *c)
+}
+
+/// Angerô: muda a cor de destaque a partir de "#rrggbb" ("" = padrão). `true` quando mudou (o
+/// tema precisa ser reaplicado).
+pub fn set_custom_accent_hex(hex: &str) -> bool {
+    let h = hex.trim().trim_start_matches('#');
+    let c = (h.len() == 6).then(|| u32::from_str_radix(h, 16).ok()).flatten().map(|v| Color32::from_rgb((v >> 16) as u8, (v >> 8) as u8, v as u8));
+    match CUSTOM_ACCENT.lock() {
+        Ok(mut slot) if *slot != c => {
+            *slot = c;
+            true
+        }
+        _ => false,
+    }
+}
+
 pub fn apply(ctx: &egui::Context) {
     apply_kind(ctx, ThemeKind::default());
 }
@@ -401,7 +424,14 @@ pub fn apply_kind(ctx: &egui::Context, kind: ThemeKind) {
         o.input_options.line_scroll_speed = WHEEL_LINE_POINTS;
         o.input_options.scroll_zoom_speed = WHEEL_ZOOM_PER_POINT;
     });
-    let t = Tokens::for_kind(kind);
+    let mut t = Tokens::for_kind(kind);
+    if let Some(c) = custom_accent() {
+        t.accent = c;
+        if !kind.is_dark() {
+            t.icon = c;
+            t.thumb = c;
+        }
+    }
     ctx.data_mut(|d| {
         d.insert_temp(egui::Id::NULL, t);
         d.insert_temp(theme_id(), kind);

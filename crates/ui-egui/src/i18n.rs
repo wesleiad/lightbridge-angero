@@ -149,7 +149,8 @@ thread_local! {
 
 /// The UI language from the environment (`LIGHTCRAFT_LANGUAGE=zh-hans`), for headless runs.
 pub fn default_language() -> Locale {
-    std::env::var("LIGHTCRAFT_LANGUAGE").ok().and_then(|value| Locale::parse_tag(&value)).unwrap_or(Locale::En)
+    // Angerô: português (Brasil) por padrão; o inglês continua em Ajustes › Idioma.
+    std::env::var("LIGHTCRAFT_LANGUAGE").ok().and_then(|value| Locale::parse_tag(&value)).unwrap_or(Locale::PtBr)
 }
 
 pub fn set_language(language: Locale) {

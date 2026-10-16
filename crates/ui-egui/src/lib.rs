@@ -907,7 +907,8 @@ impl LightcraftApp {
     /// themes, the system's appearance in Auto) is not the one it shows. A no-op otherwise.
     pub fn sync_theme(&mut self, ctx: &egui::Context) {
         let wanted = self.ui.settings.theme(self.system_theme(ctx));
-        if theme::current(ctx) != Some(wanted) {
+        let accent_changed = theme::set_custom_accent_hex(&self.ui.settings.accent_color);
+        if accent_changed || theme::current(ctx) != Some(wanted) {
             theme::apply_kind(ctx, wanted);
         }
     }

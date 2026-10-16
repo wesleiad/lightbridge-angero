@@ -201,6 +201,20 @@ pub fn show(app: &mut LightcraftApp, ui: &mut egui::Ui) {
                 let _ = app.run("view.appearance", json!({}));
             }
             resp.context_menu(|ui| {
+                // Angerô: cor do tema (destaque) escolhida pelo usuário, salva nas configurações.
+                ui.horizontal(|ui| {
+                    ui.label(crate::i18n::tr("Theme color"));
+                    let atual = crate::theme::custom_accent().unwrap_or(t.accent);
+                    let mut rgb = [atual.r(), atual.g(), atual.b()];
+                    if ui.color_edit_button_srgb(&mut rgb).changed() {
+                        app.ui.settings.accent_color = format!("#{:02x}{:02x}{:02x}", rgb[0], rgb[1], rgb[2]);
+                    }
+                });
+                if ui.add_enabled(!app.ui.settings.accent_color.is_empty(), egui::Button::new(crate::i18n::tr("Angerô default colors"))).clicked() {
+                    app.ui.settings.accent_color.clear();
+                    ui.close();
+                }
+                ui.separator();
                 let settings = ui.button(crate::i18n::tr("Appearance Settings…"));
                 register(ui.ctx(), "menu:appearanceSettings", settings.rect);
                 if settings.clicked() {
