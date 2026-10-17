@@ -544,7 +544,9 @@ mod tests {
         for (family, primary) in [(FontFamily::Proportional, "Inter"), (FontFamily::Name(FONT_SEMIBOLD.into()), "Inter-SemiBold")] {
             let names = definitions.families.get(&family).expect("UI font family");
             assert_eq!(names.first().map(String::as_str), Some(primary));
-            assert_eq!(names.get(1), default_prop.first());
+            // (Angerô: a fonte reserva vem logo depois da Montserrat)
+            assert_eq!(names.get(1).map(String::as_str), Some("AngeroReserva"));
+            assert_eq!(names.get(2), default_prop.first());
             assert!(names.iter().position(|name| name == chinese).is_some_and(|position| position > default_prop.len()));
         }
         let mono = definitions.families.get(&FontFamily::Monospace).expect("monospace font family");
@@ -574,7 +576,7 @@ mod tests {
         for (family, primary) in [(FontFamily::Proportional, "Inter"), (FontFamily::Name(FONT_SEMIBOLD.into()), "Inter-SemiBold")] {
             let names = definitions.families.get(&family).expect("UI font family");
             assert_eq!(names.first().map(String::as_str), Some(primary));
-            assert_eq!(names.get(1 + default_count).map(String::as_str), Some(WEB_CHINESE_FONT));
+            assert_eq!(names.get(2 + default_count).map(String::as_str), Some(WEB_CHINESE_FONT), "(Angerô: +1 da fonte reserva)");
         }
         assert!(definitions.families.get(&FontFamily::Monospace).is_some_and(|names| names.contains(&WEB_CHINESE_FONT.to_string())));
 
@@ -594,8 +596,9 @@ mod tests {
         set_language(Locale::Ja);
         let japanese = font_definitions_with_chinese(JAPANESE, Some(&chinese));
         let names = japanese.families.get(&FontFamily::Proportional).expect("proportional fonts");
-        assert_eq!(names.get(1 + default_count).map(String::as_str), Some("craft-fonts BIZ UDPGothic Regular"));
-        assert_eq!(names.get(2 + default_count).map(String::as_str), Some(WEB_CHINESE_FONT));
+        // (Angerô: +1 da fonte reserva depois da Montserrat)
+        assert_eq!(names.get(2 + default_count).map(String::as_str), Some("craft-fonts BIZ UDPGothic Regular"));
+        assert_eq!(names.get(3 + default_count).map(String::as_str), Some(WEB_CHINESE_FONT));
         set_language(Locale::En);
     }
 
@@ -719,7 +722,8 @@ mod tests {
             let regular = definitions.families.get(&FontFamily::Proportional).expect("regular family");
             let strong = definitions.families.get(&semibold_family()).expect("strong family");
             assert_eq!(regular.get(1..), strong.get(1..));
-            assert_eq!(definitions.font_data.len(), FontDefinitions::default().font_data.len() + 2 + craft.len());
+            // (Angerô: Montserrat normal e seminegrito + a fonte reserva)
+            assert_eq!(definitions.font_data.len(), FontDefinitions::default().font_data.len() + 3 + craft.len());
         }
     }
 }

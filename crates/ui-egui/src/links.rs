@@ -49,7 +49,8 @@ mod tests {
             assert!(!label.is_empty());
             assert_eq!(url_of(id), Some(*url));
         }
-        assert!(APP_PAGE.ends_with(&format!("/apps/{APP}")));
-        assert!(GITHUB.ends_with(&format!("/storytold/{APP}")));
+        // Angerô: a ajuda e o código ficam nos repositórios da Suíte Angerô.
+        assert!(APP_PAGE.contains("/wesleiad/Suite-Angero/"));
+        assert!(GITHUB.contains("/wesleiad/"));
     }
 }

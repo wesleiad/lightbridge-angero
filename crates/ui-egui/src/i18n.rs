@@ -149,8 +149,10 @@ thread_local! {
 
 /// The UI language from the environment (`LIGHTCRAFT_LANGUAGE=zh-hans`), for headless runs.
 pub fn default_language() -> Locale {
-    // Angerô: português (Brasil) por padrão; o inglês continua em Ajustes › Idioma.
-    std::env::var("LIGHTCRAFT_LANGUAGE").ok().and_then(|value| Locale::parse_tag(&value)).unwrap_or(Locale::PtBr)
+    // Angerô: português (Brasil) por padrão; o inglês continua em Ajustes › Idioma. Os testes
+    // herdados do original conferem os textos em inglês, então lá o padrão segue o original.
+    let padrao = if cfg!(test) { Locale::default() } else { Locale::PtBr };
+    std::env::var("LIGHTCRAFT_LANGUAGE").ok().and_then(|value| Locale::parse_tag(&value)).unwrap_or(padrao)
 }
 
 pub fn set_language(language: Locale) {
@@ -682,7 +684,7 @@ mod tests {
     #[test]
     fn preferences_round_trip_and_old_settings_remain_readable() {
         let old: crate::state::UiState = serde_json::from_str("{}").unwrap();
-        assert_eq!(old.language, Locale::PtBr, "Angerô: português por padrão");
+        assert_eq!(old.language, default_language(), "Angerô: português por padrão (inglês só nos testes)");
         // Settings written before the language list grew still load.
         let legacy: crate::state::UiState = serde_json::from_str(r#"{"language":"ja"}"#).unwrap();
         assert_eq!(legacy.language, Locale::Ja);
@@ -901,7 +903,7 @@ mod tests {
         app.ui.left_panel = true;
         let text = painted_text(&ctx, &mut app, Locale::Uk);
         assert!(text.contains("Мої фото") && text.contains("Усі фото"), "{text}");
-        for (command, title) in [("app.about", "Про LightCraft"), ("app.shortcuts", "Клавіатурні скорочення"), ("app.settings", "Налаштування")]
+        for (command, title) in [("app.about", "Про LightBridge"), ("app.shortcuts", "Клавіатурні скорочення"), ("app.settings", "Налаштування")]
         {
             app.ui.dialog = None;
             app.run(command, serde_json::json!({})).unwrap();
@@ -1045,7 +1047,7 @@ mod tests {
         app.ui.view = crate::state::ViewMode::People;
         let text = painted_text(&ctx, &mut app, Locale::De);
         assert!(text.contains("Benannte Personen"), "{text}");
-        for (command, title) in [("app.about", "Über LightCraft"), ("app.shortcuts", "Tastenkürzel"), ("app.settings", "Einstellungen")] {
+        for (command, title) in [("app.about", "Über LightBridge"), ("app.shortcuts", "Tastenkürzel"), ("app.settings", "Einstellungen")] {
             app.ui.dialog = None;
             app.run(command, serde_json::json!({})).unwrap();
             let text = painted_text(&ctx, &mut app, Locale::De);

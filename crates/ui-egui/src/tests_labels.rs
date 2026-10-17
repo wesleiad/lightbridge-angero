@@ -81,5 +81,6 @@ fn label_toast_has_pale_colour_and_rating_restores_neutral_style() {
     assert!(red.r() > 180 && red.r() > red.g() && red.r() > red.b(), "pale red toast: {red:?}");
     h.request("ui.key", json!({"key": "5"}), Duration::from_secs(20));
     let rating = pixel(&h.paint(), at);
-    assert!(rating.r() < 80 && rating.r() == rating.g() && rating.g() == rating.b(), "neutral rating toast: {rating:?}");
+    // (Angerô: o cinza neutro da Lua Nova é levemente quente, então tolera 4 níveis)
+    assert!(rating.r() < 80 && rating.r().abs_diff(rating.b()) <= 4 && rating.g().abs_diff(rating.b()) <= 4, "neutral rating toast: {rating:?}");
 }

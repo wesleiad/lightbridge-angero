@@ -72,14 +72,14 @@ fn new_library_creates_opens_and_is_remembered_and_named() {
     let dir = temp("newlib");
     let mut app = app_in(&dir);
     app.library_changed(&egui::Context::default());
-    assert_eq!(app.window_title(), "LightCraft — first");
+    assert_eq!(app.window_title(), "LightBridge - Angerô — first");
 
     let r = app.run("app.newLibrary", json!({"path": dir.to_string_lossy(), "name": "Client A"})).unwrap();
     assert_eq!(r["name"], "Client A");
     let a = dir.join("Client A");
     assert_eq!(app.session.library.as_ref().unwrap().dir, a);
     assert!(lightcraft_engine::library::is_library(&a), "the catalog is written");
-    assert_eq!(app.window_title(), "LightCraft — Client A");
+    assert_eq!(app.window_title(), "LightBridge - Angerô — Client A");
     assert_eq!(app.ui.settings.library_path, a.to_string_lossy());
 
     // a second New Library at the same place is refused and the current one stays open
@@ -110,7 +110,7 @@ fn new_library_creates_opens_and_is_remembered_and_named() {
         })
         .expect("first in Open Recent Library");
     app.run("app.openLibrary", first).unwrap();
-    assert_eq!(app.window_title(), "LightCraft — first");
+    assert_eq!(app.window_title(), "LightBridge - Angerô — first");
     let _ = std::fs::remove_dir_all(&dir);
 }
 

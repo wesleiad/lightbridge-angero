@@ -3966,7 +3966,8 @@ mod tests {
         // app settings survive a save/load round trip of the UI state (ui.json)
         let saved = serde_json::to_string(&h.app.ui).unwrap();
         let back = serde_json::from_str::<crate::UiState>(&saved).unwrap().sanitized();
-        assert_eq!(back.settings, h.app.ui.settings);
+        // (Angerô: ao carregar, a migração única marca angero_tema; o resto volta igual)
+        assert_eq!(crate::state::AppSettings { angero_tema: h.app.ui.settings.angero_tema, ..back.settings.clone() }, h.app.ui.settings);
         assert_eq!(back.view, crate::state::ViewMode::Detail, "startup view applied on load");
         h.settle(SETTLE);
     }

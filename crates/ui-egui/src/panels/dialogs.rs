@@ -1163,18 +1163,29 @@ pub fn show(app: &mut LightcraftApp, ctx: &egui::Context) {
                         2 => crate::credits::models_ui(ui),
                         _ => {
                             ui.label(egui::RichText::new("LightBridge - Angerô").font(t.semibold(20.0)).color(t.text));
-                            ui.label(format!("Versão {} — catálogo e revelação de fotos da Suíte Angerô.", env!("CARGO_PKG_VERSION")));
-                            ui.label(format!(
-                                "Suíte Angerô — Grupo Angerô. Desenvolvido por Weslei Domingues (TI). Licença MIT OU Apache-2.0 (veja NOTICE). Fontes: {} (OFL).",
-                                crate::theme::font_credits(app.chinese_font.is_some())
-                            ));
+                            // Angerô: textos da Suíte em português; nos outros idiomas, em inglês.
+                            let pt = crate::i18n::language() == crate::i18n::Locale::PtBr;
+                            let versao = env!("CARGO_PKG_VERSION");
+                            let fontes = crate::theme::font_credits(app.chinese_font.is_some());
+                            if pt {
+                                ui.label(format!("Versão {versao} — catálogo e revelação de fotos da Suíte Angerô."));
+                                ui.label(format!(
+                                    "Suíte Angerô — Grupo Angerô. Desenvolvido por Weslei Domingues (TI). Licença MIT OU Apache-2.0 (veja NOTICE). Fontes: {fontes} (OFL)."
+                                ));
+                            } else {
+                                ui.label(format!("Version {versao} — photo library and development for the Suíte Angerô."));
+                                ui.label(format!(
+                                    "Suíte Angerô — Grupo Angerô. Developed by Weslei Domingues (IT). License MIT OR Apache-2.0 (see NOTICE). Fonts: {fontes} (OFL)."
+                                ));
+                            }
                             ui.add_space(10.0);
-                            for (label, url) in [
-                                ("Ajuda do LightBridge", crate::links::APP_PAGE),
-                                ("Código-fonte (GitHub)", crate::links::GITHUB),
-                                ("Suíte Angerô", crate::links::WEBSITE),
-                            ] {
-                                let r = ui.link(crate::i18n::tr(label)).on_hover_text(url);
+                            let links = if pt {
+                                [("Ajuda do LightBridge", crate::links::APP_PAGE), ("Código-fonte (GitHub)", crate::links::GITHUB)]
+                            } else {
+                                [("LightBridge Help", crate::links::APP_PAGE), ("Source code (GitHub)", crate::links::GITHUB)]
+                            };
+                            for (label, url) in links.into_iter().chain([("Suíte Angerô", crate::links::WEBSITE)]) {
+                                let r = ui.link(label).on_hover_text(url);
                                 if r.clicked() {
                                     let _ = crate::links::open(app, url);
                                 }

@@ -148,7 +148,7 @@ fn auto_follows_the_system_and_falls_back_to_dark() {
         plain.logic(ui.ctx());
     });
     output.textures_delta.clear();
-    assert_eq!(crate::theme::current(&ctx), Some(ThemeKind::Silver));
+    assert_eq!(crate::theme::current(&ctx), Some(ThemeKind::Paper));
 }
 
 #[test]
@@ -157,7 +157,7 @@ fn view_menu_lists_modes_and_themes_with_checks() {
     a.run("view.theme", json!({"theme": "paper"})).unwrap();
     let menus = crate::menubar::menu_bar(&a);
     let text = serde_json::to_string(&menus).unwrap();
-    for label in ["Appearance", "Sync with System", "Light Mode", "Dark Mode", "Next Appearance Mode", "Charcoal", "Midnight", "Silver", "Paper"] {
+    for label in ["Appearance", "Sync with System", "Light Mode", "Dark Mode", "Next Appearance Mode", "Charcoal", "Midnight", "Silver", "Lua Nova (Angerô)"] {
         assert!(text.contains(&format!("\"{label}\"")), "{label} missing from the menus");
     }
     assert!(text.contains(r#""params":{"theme":"paper"}"#));
@@ -166,6 +166,8 @@ fn view_menu_lists_modes_and_themes_with_checks() {
 #[test]
 fn the_top_bar_button_and_settings_cards_drive_the_mode() {
     let mut h = Headless::new(app(), [1400.0, 900.0], 1.0);
+    // Angerô: o padrão agora é o claro; o teste parte do escuro, como no original.
+    h.app.ui.settings.appearance_mode = AppearanceMode::Dark;
     h.settle(Duration::from_secs(60));
     assert_eq!(h.request("ui.clickWidget", json!({"id": "icon:appearance"}), T)["ok"], true);
     h.step();
@@ -174,7 +176,7 @@ fn the_top_bar_button_and_settings_cards_drive_the_mode() {
     h.step();
     h.step();
     assert_eq!(h.app.ui.settings.appearance_mode, AppearanceMode::Light);
-    assert_eq!(crate::theme::current(&h.view.ctx), Some(ThemeKind::Silver));
+    assert_eq!(crate::theme::current(&h.view.ctx), Some(ThemeKind::Paper));
     // Settings ▸ Interface: the mode buttons and the theme radios
     h.app.ui.dialog = Some(crate::state::Dialog::Settings { tab: "interface".into() });
     h.step();
@@ -220,11 +222,11 @@ fn favorites_validate_roundtrip_and_stars_toggle_without_selecting() {
     for _ in 0..4 {
         h.step();
     }
-    assert_eq!(h.request("ui.hoverWidget", json!({"id": "radio:theme-paper"}), T)["ok"], true);
+    assert_eq!(h.request("ui.hoverWidget", json!({"id": "radio:theme-silver"}), T)["ok"], true);
     h.step();
-    assert_eq!(h.request("ui.clickWidget", json!({"id": "button:themeFavorite-paper"}), T)["ok"], true);
+    assert_eq!(h.request("ui.clickWidget", json!({"id": "button:themeFavorite-silver"}), T)["ok"], true);
     h.step();
-    assert_eq!(h.app.ui.settings.favorite_themes, vec!["paper"]);
+    assert_eq!(h.app.ui.settings.favorite_themes, vec!["silver"]);
     if let Some(path) = std::env::var_os("FAVORITES_SCREENSHOT_DIR") {
         h.request("ui.scroll", json!({"dy": -90.0}), T);
         for _ in 0..4 {
@@ -237,10 +239,10 @@ fn favorites_validate_roundtrip_and_stars_toggle_without_selecting() {
         std::fs::create_dir_all(&path).unwrap();
         std::fs::write(std::path::Path::new(&path).join("lightcraft-favorites.png"), png).unwrap();
     }
-    assert_eq!(h.app.ui.settings.light_theme, LightTheme::Silver, "starring does not select");
+    assert_eq!(h.app.ui.settings.light_theme, LightTheme::Paper, "starring does not select");
     let saved = serde_json::to_value(&h.app.ui.settings).unwrap();
     assert_eq!(serde_json::from_value::<AppSettings>(saved).unwrap(), h.app.ui.settings);
-    assert_eq!(h.request("ui.clickWidget", json!({"id": "button:themeFavorite-paper"}), T)["ok"], true);
+    assert_eq!(h.request("ui.clickWidget", json!({"id": "button:themeFavorite-silver"}), T)["ok"], true);
     h.step();
     assert!(h.app.ui.settings.favorite_themes.is_empty());
     h.app.ui.dialog = None;
